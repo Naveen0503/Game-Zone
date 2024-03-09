@@ -1,0 +1,62 @@
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    
+  }
+  
+  code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+      monospace;
+  }
+  .CandyCrush {
+    display: flex;
+    justify-content: center; /* center horizontally */
+    align-items: center; /* center vertically */
+  }
+  
+  .game {
+    background-color: #4a82bd;
+    width: 580px;
+    height: 600px;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px;
+    border-radius: 20px;
+  }
+  
+  .game img {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .scoreboard {
+    width: 150px;
+    height: 100px;
+    position: fixed;
+    top: 75px;
+    left: 150px;
+    font-size: 24px;
+    text-align: center;
+    background-color: #4a82bd;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    line-height: 1.5;
+    color:white;
+  }
+  
+  
+  .scoreboard h2 {
+    margin: 0;
+    font-size: 30px;
+  }
+  
+  .scoreboard p {
+    margin: 0;
+    font-size: 40px;
+  }
+  

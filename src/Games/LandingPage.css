@@ -1,0 +1,85 @@
+.landing-page {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    position: relative;
+    top: 100px;
+  }
+  
+  @keyframes neonBlink {
+    0% {
+      text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px red, 0 0 70px red, 0 0 80px red, 0 0 100px red, 0 0 150px red;
+    }
+    25% {
+      text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px blue, 0 0 70px blue, 0 0 80px blue, 0 0 100px blue, 0 0 150px blue;
+    }
+    50% {
+      text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px yellow, 0 0 70px yellow, 0 0 80px yellow, 0 0 100px yellow, 0 0 150px yellow;
+    }
+    75% {
+      text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px red, 0 0 70px red, 0 0 80px red, 0 0 100px red, 0 0 150px red;
+    }
+    100% {
+      text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px blue, 0 0 70px blue, 0 0 80px blue, 0 0 100px blue, 0 0 150px blue;
+    }
+  }
+  
+  .landing-page .header {
+    font-size: 2em;
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    padding: 10px;
+    animation: neonBlink 2s linear infinite;
+    color: white;
+  }
+  
+  
+  
+  .landing-page .buttons-container {
+    display: flex;
+    justify-content: space-evenly;
+  }
+  
+  .landing-page .buttons-container .button-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #3d2963;
+    color: white;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 10px;
+    width: 20%;
+  }
+  
+  .landing-page .buttons-container .button-group .game-button {
+    padding: 20px;
+    margin: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+  }
+  
+  .landing-page .buttons-container .button-group .btn-2048 {
+    background-color: #009688;
+  }
+  
+  .landing-page .buttons-container .button-group .btn-candy-crush {
+    background-color: #ff4081;
+  }
+  
+  .landing-page .buttons-container .button-group .btn-flappy-bird {
+    background-color: #f44336;
+  }
+  
+  .landing-page .scores-container {
+    background-color: #3d2963;
+    color: white;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 10px;
+    width: 50%;
+  }
+  
