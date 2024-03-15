@@ -1,8 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+// import { useState } from "react";
 import "./LandingPage.css";
-import Popup from "./Popup";
+
 
 function LandingPage() {
   const navigate = useNavigate();
@@ -10,20 +10,20 @@ function LandingPage() {
   const redirectTo = (path) => {
     navigate(path);
   };
-  const [showPopup, setShowPopup] = useState(true);
-  const [existingUsers, setExistingUsers] = useState([]);
+  // const [showPopup, setShowPopup] = useState(true);
+  // const [existingUsers, setExistingUsers] = useState([]);
 
-  const handleNewUser = (user) => {
-    setExistingUsers([...existingUsers, user]);
-    setShowPopup(false);
-  };
+  // const handleNewUser = (user) => {
+  //   setExistingUsers([...existingUsers, user]);
+  //   setShowPopup(false);
+  // };
 
-  const handleExistingUser = (user) => {
-    setShowPopup(false);
-  };
+  // const handleExistingUser = (user) => {
+  //   setShowPopup(false);
+  // };
 
-  const handleClosePopup = () => {
-  };
+  // const handleClosePopup = () => {
+  // };
   return (
     <div className="landing-page">
       <div className="header">
