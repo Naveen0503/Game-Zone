@@ -143,6 +143,7 @@ width: ${(props) =>props.width}px;
 
 background-image: url("./images/img.png");
 overflow: hidden;
+margin-top:-50px;
 `;
 
 const Obstacle = styled.div`
