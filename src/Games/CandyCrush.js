@@ -7,6 +7,7 @@ import purpleCandy from "./images/purple-candy.png"
 import redCandy from "./images/red-candy.png"
 import yellowCandy from "./images/yellow-candy.png"
 import blank from "./images/blank.png"
+import { updateScore } from "./api";
 
 const width = 8
 const candycolors = [
@@ -185,7 +186,7 @@ const CandyCrush = () => {
         currentcolorArrangement[squareBeingDraggedId] = squareBeingDragged.getAttribute('src')
         setcurrentcolorArrangement([...currentcolorArrangement])
       }
-      
+      updateScore({game: "Candy Crush", gameScore: scoreDisplay , gamerId: sessionStorage.getItem("user")} );
    }
 
    const createBoard = () =>{
@@ -223,12 +224,12 @@ const CandyCrush = () => {
 
   return (
     <div className="CandyCrush" style={{
-      height:"100vh",
+      height:"90vh",
       display: "flex",
       flexDirection: "column",
       width: "100%",
   }}>
-    <div class="scoreboard">
+    <div className="scoreboard">
   <h2>Score</h2>
   <p>{scoreDisplay}</p>
 </div>

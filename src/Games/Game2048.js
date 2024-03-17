@@ -3,6 +3,7 @@ import cloneDeep from "lodash.clonedeep";
 import React, { useEffect } from "react";
 import { useState } from 'react';
 import { getColors, useEvent } from "./util";
+import { updateScore } from "./api";
 
 
 function Game2048() {
@@ -312,7 +313,8 @@ function Game2048() {
 
   let gameoverr = checkIfGameOver();
   if(gameoverr){
-     localStorage.setItem("HighScore",localStorage.getItem("HighScore") > score ? localStorage.getItem("HighScore"): score)
+     localStorage.setItem("2048highestScores",sessionStorage.getItem("2048highestScores") > score ? sessionStorage.getItem("2048highestScores"): score)
+     updateScore({game: "2048", gameScore: score , gamerId: sessionStorage.getItem("user")});
     setGameOver(true);
   }
  }
@@ -375,7 +377,7 @@ const resetGame = () => {
       backgroundRepeat: "no-repeat",
       backgroundSize: "cover",
       backgroundPosition: "center",
-      height: "100vh",
+      height: "90vh",
       display: "flex",
       flexDirection: "column"
   }}>
@@ -391,7 +393,7 @@ const resetGame = () => {
      }}>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <div style={{ ...style.newGameButton, textAlign: "center" }}>Score <br></br> {score}</div>
-        <div style={{ ...style.newGameButton, textAlign: "center" }}>HighScore  {localStorage.getItem("HighScore")}</div>
+        <div style={{ ...style.newGameButton, textAlign: "center" }}>HighScore  {sessionStorage.getItem("2048highestScores")}</div>
        
     </div>
       {data.map((row,oneIndex)=>{

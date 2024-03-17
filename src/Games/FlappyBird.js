@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
+import { updateScore } from './api';
 
 const BIRD_SIZE = 40;
 const GAME_WIDTH = 1000;
@@ -61,11 +62,12 @@ useEffect(() => {
   if( birdposition <= 0 || birdposition >= GAME_HEIGHT - BIRD_SIZE || (obstacleleft >= 0 && obstacleleft <= OBSTACLE_WIDTH && 
     (hascollidedwithtopobstacle || hascollidedwithbottomobstacle)))
     {
-      sessionStorage.setItem("HighScore",(sessionStorage.getItem("HighScore") > score ? sessionStorage.getItem("HighScore") : score))
+      sessionStorage.setItem("FlappyBirdhighestScores",(sessionStorage.getItem("FlappyBirdhighestScores") > score ? sessionStorage.getItem("FlappyBirdhighestScores") : score))
       setscore(0);
       setgamehasstarted(false)
       setvisibility(true)
       setbirdposition(250)
+      updateScore({game: "Flappy Bird", gameScore: score , gamerId: sessionStorage.getItem("user")});
     }
 
 },[birdposition,obstacleheight,bottomobstacleheight,obstacleleft])
@@ -88,7 +90,7 @@ const handleclick = () =>{
     <Div onClick={handleclick}>
       <GameBox height={GAME_HEIGHT} width={GAME_WIDTH}>
         
-        {visibility ? <Startboard>tap to start Highscore : {sessionStorage.getItem("HighScore")}</Startboard>: null}
+        {visibility ? <Startboard>tap to start Highscore : {sessionStorage.getItem("FlappyBirdhighestScores")}</Startboard>: null}
         
       <Obstacle
         top = {0}

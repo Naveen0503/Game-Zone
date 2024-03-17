@@ -1,11 +1,18 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import axios from 'axios';
 
 const Popup = ({ onNewUser, onExistingUser }) => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
+  const [UserData,setUserdata] = useState([]);
+ useEffect(() => {
+   axios.get('https://game-zone-api-v1.azurewebsites.net/api/Gamers')
+   .then((response) => {
+     setUserdata(response.data);
+   });
+ }, []);
   const handleNewUser = async () => {
     if (!userName || !password) {
       setError("Please enter both name and password!");
@@ -20,7 +27,10 @@ const Popup = ({ onNewUser, onExistingUser }) => {
     }
 
     // Create a new user
-    const newUser = { name: userName, password, scores: [] };
+    const newUser = {
+      "name": userName,
+      "password": password
+    }
     await writeUserData(newUser);
 
     // Clear input fields and error
@@ -50,7 +60,7 @@ const Popup = ({ onNewUser, onExistingUser }) => {
       setError("Incorrect password. Please try again.");
       return;
     }
-
+    
     // Clear input fields and error
     setUserName("");
     setPassword("");
@@ -62,9 +72,7 @@ const Popup = ({ onNewUser, onExistingUser }) => {
 
   const checkExistingUser = async (username) => {
     try {
-      const response = await fetch(`http://localhost:8080/users`);
-      const userData = await response.json();
-      const existingUser = userData.find((user) => user.name.toLowerCase() === username.toLowerCase());
+      const existingUser = UserData.find((user) => user.name.toLowerCase() === username.toLowerCase());
       return existingUser;
     } catch (error) {
       console.error("Error checking existing user:", error);
@@ -74,13 +82,11 @@ const Popup = ({ onNewUser, onExistingUser }) => {
   
   const writeUserData = async (newUser) => {
     try {
-      await fetch(`http://localhost:8080/users`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newUser),
-      });
+     axios.post('https://game-zone-api-v1.azurewebsites.net/api/Gamers', newUser)
+     .then((response) => {
+      setUserdata([...UserData, response.data]);
+      localStorage.setItem('user', response.data.id);
+     })
     } catch (error) {
       console.error("Error writing user data:", error);
     }

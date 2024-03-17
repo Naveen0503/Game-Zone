@@ -83,3 +83,18 @@
     width: 50%;
   }
   
+  .highscores-container{
+    display: flex;
+    justify-content: space-around;
+  }
+  .Game2048-score-column{
+    color: #009688;
+  }
+
+  .GameCandyCrush-score-column{
+    color: #ff4081;
+  }
+
+  .GameFlappyBird-score-column{
+    color: #f44336;
+  }
