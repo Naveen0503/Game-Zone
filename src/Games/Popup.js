@@ -85,7 +85,7 @@ const Popup = ({ onNewUser, onExistingUser }) => {
      axios.post('https://game-zone-api-v1.azurewebsites.net/api/Gamers', newUser)
      .then((response) => {
       setUserdata([...UserData, response.data]);
-      localStorage.setItem('user', response.data.id);
+      sessionStorage.setItem('user', response.data.id);
      })
     } catch (error) {
       console.error("Error writing user data:", error);
