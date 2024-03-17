@@ -62,36 +62,30 @@ const Popup = ({ onNewUser, onExistingUser }) => {
 
   const checkExistingUser = async (username) => {
     try {
-      const response = await fetch(`/data/Users.json`);
+      const response = await fetch(`http://localhost:8080/users`);
       const userData = await response.json();
-      const existingUser = userData.users.find((user) => user.name.toLowerCase() === username.toLowerCase());
+      const existingUser = userData.find((user) => user.name.toLowerCase() === username.toLowerCase());
       return existingUser;
     } catch (error) {
       console.error("Error checking existing user:", error);
       return null;
     }
   };
-
+  
   const writeUserData = async (newUser) => {
     try {
-      const response = await fetch(`/data/Users.json`);
-      const userData = await response.json();
-
-      // Add the new user to the existing users
-      userData.users.push(newUser);
-
-      // Write the updated data back to the JSON file
-      await fetch(`/data/Users.json`, {
-        method: "PUT",
+      await fetch(`http://localhost:8080/users`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(userData),
+        body: JSON.stringify(newUser),
       });
     } catch (error) {
       console.error("Error writing user data:", error);
     }
   };
+  
 
   return (
     <>
@@ -106,7 +100,7 @@ const Popup = ({ onNewUser, onExistingUser }) => {
       >
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content" style={{ backgroundColor: "#3d2963", color: "white", textAlign: "center" }}>
-            <div className="modal-header border-0">
+            <div className="modal-header border-0" style={{justifyContent: "center"}}>
               <h5 className="modal-title">Login</h5>
             </div>
             <div className="modal-body" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>

@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import Popup from "./Popup";
 import "./LandingPage.css";
-
 
 function LandingPage() {
   const navigate = useNavigate();
@@ -10,6 +9,7 @@ function LandingPage() {
   const redirectTo = (path) => {
     navigate(path);
   };
+
   const [showPopup, setShowPopup] = useState(true);
   const [existingUsers, setExistingUsers] = useState([]);
 
@@ -23,7 +23,9 @@ function LandingPage() {
   };
 
   const handleClosePopup = () => {
+    setShowPopup(false);
   };
+
   return (
     <div className="landing-page">
       <div className="header">
@@ -56,8 +58,15 @@ function LandingPage() {
           <p>2048</p>
           <p>Candy Crush</p>
           <p>Flappy Bird</p>
-        </div> 
+        </div>
       </div>
+      {showPopup && (
+        <Popup
+          onNewUser={handleNewUser}
+          onExistingUser={handleExistingUser}
+          onClosePopup={handleClosePopup}
+        />
+      )}
     </div>
   );
 }
