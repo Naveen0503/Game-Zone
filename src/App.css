@@ -45,7 +45,9 @@
   align-items: center;
   margin: 0px 5px;
   position: sticky;
-  top:22%;
+ top: 22%;
+ width: 20%;
+ left: 85%;
 }
 
 .dashboard-icon {
