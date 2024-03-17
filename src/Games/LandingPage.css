@@ -6,21 +6,21 @@
     top: 100px;
   }
   
-  @keyframes neonBlink {
+  @keyframes neonTravel {
     0% {
-      text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px red, 0 0 70px red, 0 0 80px red, 0 0 100px red, 0 0 150px red;
+      text-shadow: 0 0 10px transparent;
     }
     25% {
-      text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px blue, 0 0 70px blue, 0 0 80px blue, 0 0 100px blue, 0 0 150px blue;
+      text-shadow: 0 0 10px red, 0 0 20px red, 0 0 30px red, 0 0 40px red;
     }
     50% {
-      text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px yellow, 0 0 70px yellow, 0 0 80px yellow, 0 0 100px yellow, 0 0 150px yellow;
+      text-shadow: 0 0 10px yellow, 0 0 20px yellow, 0 0 30px yellow, 0 0 40px yellow;
     }
     75% {
-      text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px red, 0 0 70px red, 0 0 80px red, 0 0 100px red, 0 0 150px red;
+      text-shadow: 0 0 10px blue, 0 0 20px blue, 0 0 30px blue, 0 0 40px blue;
     }
     100% {
-      text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px blue, 0 0 70px blue, 0 0 80px blue, 0 0 100px blue, 0 0 150px blue;
+      text-shadow: 0 0 10px green, 0 0 20px green, 0 0 30px green, 0 0 40px green;
     }
   }
   
@@ -29,7 +29,7 @@
     font-family: 'Arial', sans-serif;
     text-align: center;
     padding: 10px;
-    animation: neonBlink 2s linear infinite;
+    animation: neonTravel 4s linear infinite;
     color: white;
   }
   
