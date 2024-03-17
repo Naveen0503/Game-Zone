@@ -1,10 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import PouchDB from 'pouchdb-browser';
 
 const Popup = ({ onNewUser, onExistingUser }) => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [localDB, setLocalDB] = useState(null);
+
+  useEffect(() => {
+    const db = new PouchDB('userdb');
+    setLocalDB(db);
+  }, []);
 
   const handleNewUser = async () => {
     if (!userName || !password) {
@@ -12,24 +19,29 @@ const Popup = ({ onNewUser, onExistingUser }) => {
       return;
     }
 
-    // Check if the username already exists
-    const existingUser = await checkExistingUser(userName);
-    if (existingUser) {
-      setError("Username already exists. Please choose a different one.");
-      return;
+    try {
+      // Check if the username already exists in local database
+      const existingUser = await getUserByName(userName);
+      if (existingUser) {
+        setError("Username already exists. Please choose a different one.");
+        return;
+      }
+
+      // Create a new user
+      const newUser = { name: userName, password, scores: [] };
+      await createUser(newUser);
+
+      // Clear input fields and error
+      setUserName("");
+      setPassword("");
+      setError("");
+
+      // Trigger the callback for new user
+      onNewUser(newUser);
+    } catch (error) {
+      console.error("Error creating user:", error);
+      setError("Error creating user. Please try again.");
     }
-
-    // Create a new user
-    const newUser = { name: userName, password, scores: [] };
-    await writeUserData(newUser);
-
-    // Clear input fields and error
-    setUserName("");
-    setPassword("");
-    setError("");
-
-    // Trigger the callback for new user
-    onNewUser(newUser);
   };
 
   const handleExistingUser = async () => {
@@ -38,54 +50,60 @@ const Popup = ({ onNewUser, onExistingUser }) => {
       return;
     }
 
-    // Check if the username exists
-    const existingUser = await checkExistingUser(userName);
-    if (!existingUser) {
-      setError("User does not exist. Please register as a new user.");
-      return;
+    try {
+      // Check if the username exists in local database
+      const existingUser = await getUserByName(userName);
+      if (!existingUser) {
+        setError("User does not exist. Please register as a new user.");
+        return;
+      }
+
+      // Check if the password is correct
+      if (existingUser.password !== password) {
+        setError("Incorrect password. Please try again.");
+        return;
+      }
+
+      // Clear input fields and error
+      setUserName("");
+      setPassword("");
+      setError("");
+
+      // Trigger the callback for existing user
+      onExistingUser(existingUser);
+    } catch (error) {
+      console.error("Error logging in:", error);
+      setError("Error logging in. Please try again.");
     }
-
-    // Check if the password is correct
-    if (existingUser.password !== password) {
-      setError("Incorrect password. Please try again.");
-      return;
-    }
-
-    // Clear input fields and error
-    setUserName("");
-    setPassword("");
-    setError("");
-
-    // Trigger the callback for existing user
-    onExistingUser(existingUser);
   };
 
-  const checkExistingUser = async (username) => {
+  const getUserByName = async (name) => {
     try {
-      const response = await fetch(`http://localhost:8080/users`);
-      const userData = await response.json();
-      const existingUser = userData.find((user) => user.name.toLowerCase() === username.toLowerCase());
-      return existingUser;
+      const response = await localDB.query((doc, emit) => {
+        if (doc.name === name) emit(doc);
+      }, { include_docs: true });
+  
+      if (response.rows.length > 0) {
+        return response.rows[0].doc;
+      } else {
+        return null;
+      }
     } catch (error) {
-      console.error("Error checking existing user:", error);
-      return null;
+      console.error("Error getting user by name:", error);
+      throw error;
     }
   };
   
-  const writeUserData = async (newUser) => {
+
+  const createUser = async (userData) => {
     try {
-      await fetch(`http://localhost:8080/users`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newUser),
-      });
+      const response = await localDB.post(userData);
+      return response;
     } catch (error) {
-      console.error("Error writing user data:", error);
+      console.error("Error creating user:", error);
+      throw error;
     }
   };
-  
 
   return (
     <>
