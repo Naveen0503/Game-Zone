@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { FaArrowLeft, FaSignOutAlt } from "react-icons/fa";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
     const [isLoggedIn, setIsLoggedIn] = useState(sessionStorage.getItem("user") ? true : false);
@@ -19,12 +19,12 @@ function Dashboard() {
         <div className="dashboard">
         {isLoggedIn && (
           <>
-            <a className="dashboard-icon" title="Back to Home" onClick={handleBack}>
+            <button className="dashboard-icon" title="Back to Home" onClick={handleBack}>
               BACK<FaArrowLeft />
-            </a>
-            <a onClick={handleLogout} className="dashboard-icon" title="Logout">
+            </button>
+            <button onClick={handleLogout} className="dashboard-icon" title="Logout">
               {sessionStorage.getItem("userName")}<FaSignOutAlt />
-            </a>
+            </button>
           </>
         )}
       </div>
