@@ -10,11 +10,11 @@ function Dashboard() {
     sessionStorage.clear();
     setIsLoggedIn(false);
     nav("/");
+    window.location.reload();
   };
   const nav = useNavigate();
   const handleBack = () => {
     nav("/");
-    window.location.reload();
   }
     return (
         <div className="dashboard">

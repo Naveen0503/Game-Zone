@@ -1,18 +1,22 @@
 import React, { useState ,useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from 'axios';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const Popup = ({ onNewUser, onExistingUser }) => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [UserData,setUserdata] = useState([]);
- useEffect(() => {
-   axios.get('https://game-zone-api-v1.azurewebsites.net/api/Gamers')
-   .then((response) => {
-     setUserdata(response.data);
-   });
- }, []);
+  const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    axios.get('https://game-zone-api-v1.azurewebsites.net/api/Gamers')
+      .then((response) => {
+        setUserdata(response.data);
+      });
+  }, []);
+
   const handleNewUser = async () => {
     if (!userName || !password) {
       setError("Please enter both name and password!");
@@ -30,7 +34,7 @@ const Popup = ({ onNewUser, onExistingUser }) => {
     const newUser = {
       "name": userName,
       "password": password
-    }
+    };
     await writeUserData(newUser);
 
     // Clear input fields and error
@@ -82,16 +86,15 @@ const Popup = ({ onNewUser, onExistingUser }) => {
   
   const writeUserData = async (newUser) => {
     try {
-     axios.post('https://game-zone-api-v1.azurewebsites.net/api/Gamers', newUser)
-     .then((response) => {
-      setUserdata([...UserData, response.data]);
-      sessionStorage.setItem('user', response.data.id);
-     })
+      axios.post('https://game-zone-api-v1.azurewebsites.net/api/Gamers', newUser)
+        .then((response) => {
+          setUserdata([...UserData, response.data]);
+          sessionStorage.setItem('user', response.data.id);
+        });
     } catch (error) {
       console.error("Error writing user data:", error);
     }
   };
-  
 
   return (
     <>
@@ -118,14 +121,18 @@ const Popup = ({ onNewUser, onExistingUser }) => {
                 onChange={(e) => setUserName(e.target.value)}
                 className="form-control mb-2"
               />
-              <input
-                style={{ width: "80%" }}
-                type="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="form-control mb-2"
-              />
+              <div className="input-group mb-2" style={{ width: "80%" }}>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="form-control"
+                />
+                <span className="input-group-text" style={{ cursor: "pointer" }} onClick={() => setShowPassword(!showPassword)}>
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
               {error && <p style={{ color: "red" }}>{error}</p>}
               <div className="d-flex justify-content-around">
                 <button
