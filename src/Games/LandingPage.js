@@ -66,7 +66,6 @@ function LandingPage() {
     setUserData([...userData, user]);
     setShowPopup(false);
     sessionStorage.setItem("userName",user.name);
-    window.location.reload();
   };
 
   const handleExistingUser = (user) => {
