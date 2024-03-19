@@ -19,7 +19,10 @@ import vstripedred from "./images/Striped_red_v.png"
 import hstripedred from "./images/Striped_red_h.png"
 import vstripedyellow from "./images/Striped_yellow_v.png"
 import hstripedyellow from "./images/Striped_yellow_h.png"
+import colorbombcandy from "./images/Colour_Bomb_new.png"
 import { updateScore } from "./api";
+import { is } from "@babel/types";
+import { get } from "lodash";
 
 
 const width = 8
@@ -29,7 +32,7 @@ const candycolors = [
   orangeCandy,
   purpleCandy,
   redCandy,
-  yellowCandy,
+  yellowCandy
 ]
 
 const stripedcolors = [
@@ -77,7 +80,24 @@ const getColors = (color) =>{
   if(color.includes("blank")) return 'blank'
 
 }
+const stripedaction = (i, direction) => {
+  const numRows = 8; 
+  const rowLength = 8;
+  const result = [];
+  if (direction === "h") {
+      const start = Math.floor(i / rowLength) * rowLength;
+      for (let j = start; j < start + rowLength; j++) {
+          result.push(j);
+      }
+  } else if (direction === "v") {
+      const start = i % rowLength;
+      for (let j = start; j < numRows * rowLength; j += rowLength) {
+          result.push(j);
+      }
+  }
 
+  return result;
+}
 const CandyCrush = () => {
   
    const [currentcolorArrangement,setcurrentcolorArrangement] = useState([])
@@ -90,13 +110,46 @@ const CandyCrush = () => {
     {
       const columnOfThree = [i,i+width,i+width*2]
       const decidedColor = currentcolorArrangement[i].color
-      const isBlank = currentcolorArrangement[i] === blank
+      const isBlank = currentcolorArrangement[i].color === blank
 
       if(columnOfThree.every(square => currentcolorArrangement[square].color === decidedColor && !isBlank)){
+        if(columnOfThree.some(square => currentcolorArrangement[square].type === "vstriped" || columnOfThree.some(square => currentcolorArrangement[square].type === "hstriped"))){
+          columnOfThree.forEach(element => {
+            if (currentcolorArrangement[element].type === "vstriped") {
+                setScoreDisplay((score) => score + 80);
+                const column = stripedaction(element, "v");
+                column.forEach(square => {
+                    if (currentcolorArrangement[square].type === "regular") {
+                        currentcolorArrangement[square].src = blank;
+                        currentcolorArrangement[square].color = "blank";
+                        currentcolorArrangement[square].type = "regular";
+                    }
+                });
+            }
+            if (currentcolorArrangement[element].type === "hstriped") {
+                setScoreDisplay((score) => score + 80);
+                const row = stripedaction(element, "h");
+                row.forEach(square => {
+                    if (currentcolorArrangement[square].type === "regular") {
+                        currentcolorArrangement[square].src = blank;
+                        currentcolorArrangement[square].color = "blank";
+                        currentcolorArrangement[square].type = "regular";
+                    }
+                });
+            }
+        });
+            columnOfThree.forEach(square => {currentcolorArrangement[square].src = blank
+              currentcolorArrangement[square].color = "blank"
+              currentcolorArrangement[square].type = "regular"})
+              return true
+        }
+        else {
         setScoreDisplay((score)=> score + 3)
         columnOfThree.forEach(square => {currentcolorArrangement[square].src = blank
-        currentcolorArrangement[square].color = "blank"})
+        currentcolorArrangement[square].color = "blank"
+        currentcolorArrangement[square].type = "regular"})
         return true
+        }
       }
     }
    }
@@ -108,15 +161,49 @@ const CandyCrush = () => {
       const decidedColor = currentcolorArrangement[i].color
      
       if(columnOfFour.every(square => currentcolorArrangement[square].color === decidedColor)){
-        setScoreDisplay((score)=> score + 4)
+        if(columnOfFour.some(square => currentcolorArrangement[square].type === "vstriped" || columnOfFour.some(square => currentcolorArrangement[square].type === "hstriped"))){
+          columnOfFour.forEach(element => {
+           if(currentcolorArrangement[element].type === "vstriped"){
+            setScoreDisplay((score)=> score + 80)
+            const column = stripedaction(element, "v");
+            column.forEach(square => {if(currentcolorArrangement[square].type === "regular"){
+              currentcolorArrangement[square].src = blank
+              currentcolorArrangement[square].color = "blank"
+              currentcolorArrangement[square].type = "regular"
+            }})
+           }
+            if(currentcolorArrangement[element].type === "hstriped"){
+              setScoreDisplay((score)=> score + 80)
+              const row = stripedaction(element, "h");
+              row.forEach(square => {if(currentcolorArrangement[square].type === "regular"){
+                currentcolorArrangement[square].src = blank
+                currentcolorArrangement[square].color = "blank"
+                currentcolorArrangement[square].type = "regular"
+              }})
+            }
+           });
+            columnOfFour.forEach(square => {currentcolorArrangement[square].src = blank
+              currentcolorArrangement[square].color = "blank"
+              currentcolorArrangement[square].type = "regular"})
+              const square = columnOfFour[0];
+              const c = getstripedcolor(decidedColor,"v")
+              currentcolorArrangement[square].src = c
+              currentcolorArrangement[square].color = decidedColor
+              currentcolorArrangement[square].type = "vstriped"
+              return true
+        }
+          else {
+        setScoreDisplay((score)=> score + 40)
         columnOfFour.forEach(square => {currentcolorArrangement[square].src = blank
-        currentcolorArrangement[square].color = "blank"});
+        currentcolorArrangement[square].color = "blank"
+        currentcolorArrangement[square].type = "regular"});
         const square = columnOfFour[0];
         const c = getstripedcolor(decidedColor,"v")
-        console.log(c);
         currentcolorArrangement[square].src = c
         currentcolorArrangement[square].color = decidedColor
+        currentcolorArrangement[square].type = "vstriped"
         return true
+        }
       }
     }
    }
@@ -128,10 +215,49 @@ const CandyCrush = () => {
       const decidedColor = currentcolorArrangement[i].color;
 
       if(columnOfFive.every(square => currentcolorArrangement[square].color === decidedColor)){
-        setScoreDisplay((score)=> score + 5)
+        if(columnOfFive.some(square => currentcolorArrangement[square].type === "vstriped" || columnOfFive.some(square => currentcolorArrangement[square].type === "hstriped"))){
+          columnOfFive.forEach(element => {
+             if(currentcolorArrangement[element].type === "vstriped"){
+              setScoreDisplay((score)=> score + 80)
+              const column = stripedaction(element, "v");
+              column.forEach(square => {if(currentcolorArrangement[square].type === "regular"){
+                currentcolorArrangement[square].src = blank
+                currentcolorArrangement[square].color = "blank"
+                currentcolorArrangement[square].type = "regular"
+              }})
+             }
+            if(currentcolorArrangement[element].type === "hstriped"){
+              setScoreDisplay((score)=> score + 80)
+              const row = stripedaction(element, "h");
+              row.forEach(square => {if(currentcolorArrangement[square].type === "regular"){
+                currentcolorArrangement[square].src = blank
+                currentcolorArrangement[square].color = "blank"
+                currentcolorArrangement[square].type = "regular"
+              }})
+            }
+           });
+            columnOfFive.forEach(square => {currentcolorArrangement[square].src = blank
+              currentcolorArrangement[square].color = "blank"
+              currentcolorArrangement[square].type = "regular"})
+              let square = columnOfFive[0];
+              const c = colorbombcandy
+              currentcolorArrangement[square].src = c
+              currentcolorArrangement[square].color = "colorbomb"
+              currentcolorArrangement[square].type = "colorbomb"
+              return true
+        }
+        else {
+        setScoreDisplay((score)=> score + 50)
         columnOfFive.forEach(square => {currentcolorArrangement[square].src = blank
-        currentcolorArrangement[square].color = "blank"})
+        currentcolorArrangement[square].color = "blank"
+        currentcolorArrangement[square].type = "regular"})
+        let square = columnOfFive[0];
+              const c = colorbombcandy
+              currentcolorArrangement[square].src = c
+              currentcolorArrangement[square].color = "colorbomb"
+              currentcolorArrangement[square].type = "colorbomb"
         return true
+        }
       }
     }
    }
@@ -146,10 +272,39 @@ const CandyCrush = () => {
       if(notvalid.includes(i)) continue
 
       if(rowOfThree.every(square => currentcolorArrangement[square].color === decidedColor)){
+        if(rowOfThree.some(square => currentcolorArrangement[square].type === "vstriped" || rowOfThree.some(square => currentcolorArrangement[square].type === "hstriped"))){
+          rowOfThree.forEach(element => {
+            if(currentcolorArrangement[element].type === "vstriped"){
+              setScoreDisplay((score)=> score + 80)
+              const column = stripedaction(element, "v");
+              column.forEach(square => {if(currentcolorArrangement[square].type === "regular"){
+                currentcolorArrangement[square].src = blank
+                currentcolorArrangement[square].color = "blank"
+                currentcolorArrangement[square].type = "regular"
+              }})
+            }
+            if(currentcolorArrangement[element].type === "hstriped"){
+              setScoreDisplay((score)=> score + 80)
+              const row = stripedaction(element, "h");
+              row.forEach(square => {if(currentcolorArrangement[square].type === "regular"){
+                currentcolorArrangement[square].src = blank
+                currentcolorArrangement[square].color = "blank"
+                currentcolorArrangement[square].type = "regular"
+              }})
+            }
+           });
+            rowOfThree.forEach(square => {currentcolorArrangement[square].src = blank
+              currentcolorArrangement[square].color = "blank"
+              currentcolorArrangement[square].type = "regular"})
+              return true
+        }
+          else{
         setScoreDisplay((score)=> score + 3)
         rowOfThree.forEach(square => {currentcolorArrangement[square].src = blank
-        currentcolorArrangement[square].color = "blank"})
+        currentcolorArrangement[square].color = "blank"
+        currentcolorArrangement[square].type = "regular"})
         return true
+        }
       }
     }
    }
@@ -163,14 +318,49 @@ const CandyCrush = () => {
 
       if(notvalid.includes(i)) continue
       if(rowOfFour.every(square => currentcolorArrangement[square].color === decidedColor)){
-        setScoreDisplay((score)=> score + 4)
+         if(rowOfFour.some(square => currentcolorArrangement[square].type === "vstriped" || rowOfFour.some(square => currentcolorArrangement[square].type === "hstriped"))){
+          rowOfFour.forEach(element => {
+            if(currentcolorArrangement[element].type === "vstriped"){
+              setScoreDisplay((score)=> score + 80)
+              const column = stripedaction(element, "v");
+              column.forEach(square => {if(currentcolorArrangement[square].type === "regular"){
+                currentcolorArrangement[square].src = blank
+                currentcolorArrangement[square].color = "blank"
+                currentcolorArrangement[square].type = "regular"
+              }})
+            }
+            if(currentcolorArrangement[element].type === "hstriped"){
+              setScoreDisplay((score)=> score + 80)
+              const row = stripedaction(element, "h");
+              row.forEach(square => {if(currentcolorArrangement[square].type === "regular"){
+                currentcolorArrangement[square].src = blank
+                currentcolorArrangement[square].color = "blank"
+                currentcolorArrangement[square].type = "regular"
+              }});
+            }
+           });
+            rowOfFour.forEach(square => {currentcolorArrangement[square].src = blank
+              currentcolorArrangement[square].color = "blank"
+              currentcolorArrangement[square].type = "regular"})
+              const square = rowOfFour[0];
+              const c = getstripedcolor(decidedColor,"h")
+             currentcolorArrangement[square].src = c
+             currentcolorArrangement[square].color = decidedColor
+             currentcolorArrangement[square].type = "hstriped"
+             return true
+         }
+        else{
+        setScoreDisplay((score)=> score + 40)
         rowOfFour.forEach(square => {currentcolorArrangement[square].src = blank
-        currentcolorArrangement[square].color = "blank"});
+        currentcolorArrangement[square].color = "blank"
+        currentcolorArrangement[square].type = "regular"});
           const square = rowOfFour[0];
           const c = getstripedcolor(decidedColor,"h")
          currentcolorArrangement[square].src = c
          currentcolorArrangement[square].color = decidedColor
+         currentcolorArrangement[square].type = "hstriped"
         return true
+        }
       }
     }
    }
@@ -185,34 +375,134 @@ const CandyCrush = () => {
       if(notvalid.includes(i)) continue
 
       if(rowOfFive.every(square => currentcolorArrangement[square].color === decidedColor)){
-        setScoreDisplay((score)=> score + 5)
+       if(rowOfFive.some(square => currentcolorArrangement[square].type === "vstriped" || rowOfFive.some(square => currentcolorArrangement[square].type === "hstriped"))){
+          rowOfFive.forEach(element => {
+            if(currentcolorArrangement[element].type === "vstriped"){
+              setScoreDisplay((score)=> score + 80)
+              const column = stripedaction(element, "v");
+              column.forEach(square => {if(currentcolorArrangement[square].type === "regular"){
+                currentcolorArrangement[square].src = blank
+                currentcolorArrangement[square].color = "blank"
+                currentcolorArrangement[square].type = "regular"
+              }})
+            }
+            if(currentcolorArrangement[element].type === "hstriped"){
+              setScoreDisplay((score)=> score + 80)
+              const row = stripedaction(element, "h");
+              row.forEach(square => {if(currentcolorArrangement[square].type === "regular"){
+                currentcolorArrangement[square].src = blank
+                currentcolorArrangement[square].color = "blank"
+                currentcolorArrangement[square].type = "regular"
+              }})
+            }
+            });
+            rowOfFive.forEach(square => {currentcolorArrangement[square].src = blank
+              currentcolorArrangement[square].color = "blank"
+              currentcolorArrangement[square].type = "regular"})
+            let square = rowOfFive[0];
+            const c = colorbombcandy
+            currentcolorArrangement[square].src = c
+            currentcolorArrangement[square].color = "colorbomb"
+            currentcolorArrangement[square].type = "colorbomb"
+            return true
+       }
+        else{
+        setScoreDisplay((score)=> score + 50)
         rowOfFive.forEach(square => {currentcolorArrangement[square].src = blank
-        currentcolorArrangement[square].color = "blank"})
+        currentcolorArrangement[square].color = "blank"
+        currentcolorArrangement[square].type = "regular"})
+        let square = rowOfFive[0];
+        const c = colorbombcandy
+        currentcolorArrangement[square].src = c
+        currentcolorArrangement[square].color = "colorbomb"
+        currentcolorArrangement[square].type = "colorbomb"
         return true
+        }
       }
     }
    }
 
-   const moveSquareIntoBelow = () => {
-    for(let i= 0 ; i < 64 - width;i++){
-      const firstRow = [0,1,2,3,4,5,6,7]
-      const isFirstRow = firstRow.includes(i);
-
-     if(isFirstRow && currentcolorArrangement[i].src === blank){
-      let randomNumber = Math.floor(Math.random()* candycolors.length)
-      currentcolorArrangement[i].src = candycolors[randomNumber]
-      currentcolorArrangement[i].color = getColors(candycolors[randomNumber])
-     }  
-
-     if(currentcolorArrangement[i+width].src === blank)
-     {
-      currentcolorArrangement[i+width].src = currentcolorArrangement[i].src;
-      currentcolorArrangement[i+width].color = currentcolorArrangement[i].color;
-      currentcolorArrangement[i].src= blank;
-      currentcolorArrangement[i].color = "blank";
-     }
+   const checkcolorbomb = (squareBeingDraggedId, squareBeingReplacedId) => {
+    debugger;
+    const colorbomb = currentcolorArrangement[squareBeingDraggedId].type === "colorbomb" || currentcolorArrangement[squareBeingReplacedId].type === "colorbomb";
+    if (colorbomb) {
+        const colorId = currentcolorArrangement[squareBeingDraggedId].type === "colorbomb" ? squareBeingReplacedId : squareBeingDraggedId;
+        const colorbombId = currentcolorArrangement[squareBeingDraggedId].type === "colorbomb" ? squareBeingDraggedId : squareBeingReplacedId;
+        const colorbombColor = currentcolorArrangement[colorId].color;
+        const type = currentcolorArrangement[colorId].type;
+        let count = 0;
+        if(colorbombColor === currentcolorArrangement[colorbombId].color){
+            for (let i=0; i<width*width; i++){
+                    currentcolorArrangement[i].src = blank;
+                    currentcolorArrangement[i].color = "blank";
+                    currentcolorArrangement[i].type = "regular";
+                    count++;
+            }
+        }
+        else{
+        for (let i = 0; i < width * width; i++) {
+            if (currentcolorArrangement[i].color === colorbombColor) {
+              if(type === "vstriped"){
+                currentcolorArrangement[i].src = getstripedcolor(colorbombColor,"v");
+                currentcolorArrangement[i].color = colorbombColor;
+                currentcolorArrangement[i].type = "vstriped";
+              }
+              else if(type === "hstriped"){
+                currentcolorArrangement[i].src = getstripedcolor(colorbombColor,"h");
+                currentcolorArrangement[i].color = colorbombColor;
+                currentcolorArrangement[i].type = "hstriped";
+              }
+              else{
+                currentcolorArrangement[i].src = blank;
+                currentcolorArrangement[i].color = "blank";
+                currentcolorArrangement[i].type = "regular";
+                count++;
+              }
+            }
+        }
+      }
+        if(currentcolorArrangement[colorId].type === "vstriped" || currentcolorArrangement[colorId].type === "hstriped" || currentcolorArrangement[colorId].type === "colorbomb"){
+        currentcolorArrangement[colorId].src = blank;
+        currentcolorArrangement[colorId].color = "blank";
+        currentcolorArrangement[colorId].type = "regular";
+        }
+        currentcolorArrangement[colorbombId].src = blank;
+        currentcolorArrangement[colorbombId].color = "blank";
+        currentcolorArrangement[colorbombId].type = "regular";
+        setScoreDisplay((score) => score + count*10);
     }
+    return true;
    }
+
+   const moveSquareIntoBelow = () => {
+    for (let col = 0; col < width; col++) {
+        for (let row = width - 1; row >= 0; row--) {
+            const currentIndex = row * width + col;
+
+            if (currentcolorArrangement[currentIndex].src === blank) {
+                let nextIndex = currentIndex - width;
+                while (nextIndex >= 0 && currentcolorArrangement[nextIndex].src === blank) {
+                    nextIndex -= width;
+                }
+
+                if (nextIndex >= 0) {
+                    currentcolorArrangement[currentIndex].src = currentcolorArrangement[nextIndex].src;
+                    currentcolorArrangement[currentIndex].color = currentcolorArrangement[nextIndex].color;
+                    currentcolorArrangement[currentIndex].type = currentcolorArrangement[nextIndex].type;
+                    currentcolorArrangement[nextIndex].src = blank;
+                    currentcolorArrangement[nextIndex].color = "blank";
+                    currentcolorArrangement[nextIndex].type = "regular";
+                } else {
+                    let randomNumber = Math.floor(Math.random() * candycolors.length);
+                    currentcolorArrangement[currentIndex].src = candycolors[randomNumber];
+                    currentcolorArrangement[currentIndex].color = getColors(candycolors[randomNumber]);
+                    currentcolorArrangement[currentIndex].type = "regular";
+                }
+            }
+        }
+    }
+};
+
 
    const dragStart = (e) =>{
      setsquareBeingDragged(e.target)
@@ -223,6 +513,7 @@ const CandyCrush = () => {
    }
 
    const dragEnd = (e) => {
+    try{
     const squareBeingDraggedId = parseInt(squareBeingDragged.getAttribute('data-id'));
     const squareBeingReplacedId = parseInt(squareBeingReplaced.getAttribute('data-id'));
     const validMoves = [
@@ -236,6 +527,8 @@ const CandyCrush = () => {
     if (validMove) {
         currentcolorArrangement[squareBeingReplacedId].src = squareBeingDragged.getAttribute('src');
         currentcolorArrangement[squareBeingDraggedId].color= squareBeingReplaced.getAttribute('alt');
+        currentcolorArrangement[squareBeingReplacedId].type = squareBeingDragged.getAttribute('data-type');
+        currentcolorArrangement[squareBeingDraggedId].type = squareBeingReplaced.getAttribute('data-type');
         currentcolorArrangement[squareBeingDraggedId].src = squareBeingReplaced.getAttribute('src');
         currentcolorArrangement[squareBeingReplacedId].color = squareBeingDragged.getAttribute('alt');
     }
@@ -247,22 +540,29 @@ const CandyCrush = () => {
     const isAColumnOfThree = checkColumnOfThree();
     const isARowOfThree = checkRowOfThree();
 
+    const colorbombeffect = validMove ? checkcolorbomb(squareBeingDraggedId, squareBeingReplacedId) : false;
     if (squareBeingReplacedId && validMove && (
         isAColumnOfFive || isARowOfFive ||
         isAColumnOfFour || isARowOfFour ||
-        isAColumnOfThree || isARowOfThree
+        isAColumnOfThree || isARowOfThree || colorbombeffect
     )) {
         setsquareBeingDragged(null);
         setsquareBeingReplaced(null);
     } else {
         currentcolorArrangement[squareBeingReplacedId].src = squareBeingReplaced.getAttribute('src');
         currentcolorArrangement[squareBeingReplacedId].color = squareBeingReplaced.getAttribute('alt');
+        currentcolorArrangement[squareBeingReplacedId].type = squareBeingReplaced.getAttribute('data-type');
         currentcolorArrangement[squareBeingDraggedId].src = squareBeingDragged.getAttribute('src');
         currentcolorArrangement[squareBeingDraggedId].color = squareBeingDragged.getAttribute('alt');
+        currentcolorArrangement[squareBeingDraggedId].type = squareBeingDragged.getAttribute('data-type');
         setcurrentcolorArrangement([...currentcolorArrangement]);
     }
 
     updateScore({ game: "Candy Crush", gameScore: scoreDisplay, gamerId: sessionStorage.getItem("user") });
+  }
+  catch(e){
+    console.log(e)
+  }
 }
 
 
@@ -272,7 +572,8 @@ const createBoard = () => {
       const randomColor = candycolors[Math.floor(Math.random() * candycolors.length)];
       const colorObj = {
           src: randomColor,
-          color: getColors(randomColor)
+          color: getColors(randomColor),
+          type: "regular"
       };
       randomcolorArrangement.push(colorObj);
   }
@@ -324,6 +625,7 @@ const createBoard = () => {
         src={candy.src}
         alt={candy.color}
         data-id={index}
+        data-type={candy.type}
         draggable={true}
         onDragStart={dragStart}
         onDragOver={(e) => e.preventDefault()}
