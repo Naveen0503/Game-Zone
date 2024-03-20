@@ -113,7 +113,12 @@ const GameBoard = () => {
         const { data } = response;
        if(data.gameBoard === "---------" || data.gameBoard === ""){
         setPlayer("X");
-       }else{
+       }
+       else if(data.gameBoard.includes("X") && !data.gameBoard.includes("O")){
+        setPlayer("O");
+        updateGameBoard(data.gameBoard);
+       }
+       else{
         setPlayer("O");
         updateGameBoard(data.gameBoard);
        }
