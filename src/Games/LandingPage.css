@@ -74,6 +74,9 @@
     background-color: #f44336;
   }
   
+  .landing-page .buttons-container .button-group .btn-tic-tac-toe {
+    background-color: yellowgreen;
+  }
   .landing-page .scores-container {
     background-color: #3d2963;
     color: white;

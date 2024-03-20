@@ -122,6 +122,12 @@ function LandingPage() {
           >
             Flappy Bird
           </button>
+          <button
+            className="game-button btn-tic-tac-toe"
+            onClick={() => redirectTo("/tictactoe")}
+          >
+            Tic Tac Toe
+          </button>
         </div>
         <div className="scores-container">
           <h2>Your Scores</h2>
