@@ -5,6 +5,7 @@ import Game2048 from "./Games/Game2048";
 import LandingPage from "./Games/LandingPage";
 import "./App.css";
 import Dashboard from "./Games/dashboard";
+import TicTacToe from "./Games/tictactoe";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/candycrush" element={<CandyCrush />} />
           <Route path="/flappybird" element={<FlappyBird />} />
           <Route path="/2048" element={<Game2048 />} />
+          <Route path="/tictactoe" element={<TicTacToe/>} />
         </Routes>
       </BrowserRouter>
     </div>

@@ -1,0 +1,36 @@
+.game-container {
+  text-align: center;
+}
+
+.game-board {
+  display: inline-block;
+  margin-top: 20px;
+  border: 4px solid #1f1635; /* Darker shade of the original color */
+  border-radius: 20px; /* Curved edges */
+  padding: 10px; /* Add padding for spacing */
+  background-color: white;
+}
+
+.board-row:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+
+.square {
+  background-color: #3d2963;
+  border: 2px solid white; /* A shade of the original color */
+  border-radius: 10px; /* Curved edges */
+  color: white;
+  font-size: 48px; /* Increase font size for larger squares */
+  font-weight: bold;
+  width: 120px; /* Increase square size */
+  height: 120px; /* Increase square size */
+  float: left;
+  margin-right: -2px;
+  margin-bottom: -2px;
+}
+
+.square:hover {
+  cursor: pointer;
+}
