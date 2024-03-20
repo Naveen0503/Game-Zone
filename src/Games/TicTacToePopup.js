@@ -75,7 +75,7 @@ const TicTacToePopup = ({ onjoinRoom }) => {
        axios.get(`https://game-zone-api-v1.azurewebsites.net/api/tictactoesessions/${joinRoomId}`)
        .then((response) => {
          if(response.data.player1Id == sessionStorage.getItem('user') || response.data.player2Id == sessionStorage.getItem('user')){
-             onjoinRoom(joinRoomId, response.data.currentPlayerId == sessionStorage.getItem('user') ?  'X' : 'O')
+             onjoinRoom(joinRoomId, response.data.currentPlayerId == sessionStorage.getItem('user') ?  'X' : 'O',response.data.player1Id,response.data.player2Id)
          }
          else{
           setError("You are not part of this room!");
@@ -132,9 +132,14 @@ const TicTacToePopup = ({ onjoinRoom }) => {
                     onChange={(e) => setSelectedPlayer(e.target.value)}
                   >
                     <option value="">Select a player</option>
-                    {userData.map((user) => (
-                      <option key={user.id} value={user.id}>{user.name}</option>
-                    ))}
+                    {userData.map((user) => {
+                        if (user.id !== sessionStorage.getItem('user')) {
+                            return (
+                                <option key={user.id} value={user.id}>{user.name}</option>
+                            );
+                        }
+                        return null; 
+                    })}
                   </select>
                   {roomId && (
                     <div>

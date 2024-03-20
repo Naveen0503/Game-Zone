@@ -21,11 +21,15 @@ const GameBoard = () => {
   const [player, setPlayer] = useState("");
   const [showPopup, setShowPopup] = useState(true);
   const [roomId, setRoomId] = useState("");
+  const [player1Id, setPlayer1Id] = useState("");
+  const [player2Id, setPlayer2Id] = useState("");
    
 
-  const joinRoom = (roomId, player) => {
+  const joinRoom = (roomId, player, player1Id , player2Id) => {
     setPlayer(player);
     setRoomId(roomId);
+    setPlayer1Id(player1Id);
+    setPlayer2Id(player2Id);
     if(player === 'X') {
       setWaitingForOpponent(false);
     }
@@ -77,10 +81,10 @@ const GameBoard = () => {
       await axios.put(
         `https://game-zone-api-v1.azurewebsites.net/api/tictactoesessions/${roomId}`,
         {
-          sessionId: 1,
-          player1Id: 19,
-          player2Id: 20,
-          currentPlayerId: 19,
+          sessionId: roomId,
+          player1Id: player1Id,
+          player2Id: player2Id,
+          currentPlayerId: sessionStorage.getItem("user") === player1Id ? player2Id : player1Id,
           gameBoard: gameBoardString,
           gameStatus: winner ? "finished" : "ongoing",
           updatedAt: new Date().toISOString(),
