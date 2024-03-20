@@ -17,12 +17,12 @@ const GameBoard = () => {
   const [waitingForOpponent, setWaitingForOpponent] = useState(false);
   const [gameString, setGameString] = useState("");
   const [fetchData, setFetchData] = useState(false);
+  const [player, setPlayer] = useState("");
   
   const fetchGameState = async () => {
     try {
       const response = await axios.get("https://game-zone-api-v1.azurewebsites.net/api/tictactoesessions/1")
       const { data } = response;
-      console.log(data,"running....");
       const gameBoard  = data.gameBoard;
       const gameStatus = data.gameStatus;
       if (gameString !== gameBoard) {
@@ -48,7 +48,7 @@ const GameBoard = () => {
   const handleClick = async (index) => {
     if (winner || board[index]==='X'|| board[index]==='O'|| waitingForOpponent) return;
     const newBoard = [...board];
-    newBoard[index] = "X"; 
+    newBoard[index] = player; 
     setBoard(newBoard);
     setWaitingForOpponent(true);
     const gameBoardString = newBoard.map((value, idx) => {
@@ -108,7 +108,15 @@ const GameBoard = () => {
       return () => clearInterval(intervalId); 
     }
   }, [fetchData]);
-
+    useEffect( async () => {
+        const response = await axios.get("https://game-zone-api-v1.azurewebsites.net/api/tictactoesessions/1")
+        const { data } = response;
+       if(data.gameBoard === "---------"){
+        setPlayer("X");
+       }else{
+        setPlayer("O");
+       }
+    },[])
   const renderSquare = (index) => {
     return (
       <button
