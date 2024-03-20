@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./tictactoe.css";
+import TicTacToePopup from "./TicTacToePopup";
 
 const TicTacToe = () => {
   return (
@@ -18,10 +19,27 @@ const GameBoard = () => {
   const [gameString, setGameString] = useState("");
   const [fetchData, setFetchData] = useState(false);
   const [player, setPlayer] = useState("");
-  
+  const [showPopup, setShowPopup] = useState(true);
+  const [roomId, setRoomId] = useState("");
+   
+
+  const joinRoom = (roomId, player) => {
+    setPlayer(player);
+    setRoomId(roomId);
+    if(player === 'X') {
+      setWaitingForOpponent(false);
+    }
+    else {
+      setGameString("---------");
+      setWaitingForOpponent(true);
+      setFetchData(true);
+    }
+    setShowPopup(false);
+  }
+
   const fetchGameState = async () => {
     try {
-      const response = await axios.get("https://game-zone-api-v1.azurewebsites.net/api/tictactoesessions/1")
+      const response = await axios.get(`https://game-zone-api-v1.azurewebsites.net/api/tictactoesessions/${roomId}`)
       const { data } = response;
       const gameBoard  = data.gameBoard;
       const gameStatus = data.gameStatus;
@@ -52,12 +70,12 @@ const GameBoard = () => {
     setBoard(newBoard);
     setWaitingForOpponent(true);
     const gameBoardString = newBoard.map((value, idx) => {
-      return value || (idx === index ? "X" : "-");
+      return value || (idx === index ? player : "-");
     }).join("");
     checkWinner(gameBoardString);
     try {
       await axios.put(
-        "https://game-zone-api-v1.azurewebsites.net/api/tictactoesessions/1",
+        `https://game-zone-api-v1.azurewebsites.net/api/tictactoesessions/${roomId}`,
         {
           sessionId: 1,
           player1Id: 19,
@@ -108,21 +126,7 @@ const GameBoard = () => {
       return () => clearInterval(intervalId); 
     }
   }, [fetchData]);
-    useEffect( async () => {
-        const response = await axios.get("https://game-zone-api-v1.azurewebsites.net/api/tictactoesessions/1")
-        const { data } = response;
-       if(data.gameBoard === "---------" || data.gameBoard === ""){
-        setPlayer("X");
-       }
-       else if(data.gameBoard.includes("X") && !data.gameBoard.includes("O")){
-        setPlayer("O");
-        updateGameBoard(data.gameBoard);
-       }
-       else{
-        setPlayer("O");
-        updateGameBoard(data.gameBoard);
-       }
-    },[])
+    
   const renderSquare = (index) => {
     return (
       <button
@@ -154,6 +158,11 @@ const GameBoard = () => {
       </div>
       {winner && <div>Winner: {winner}</div>}
       {!winner && waitingForOpponent && <div>Waiting for opponent...</div>}
+      {showPopup && (
+        <TicTacToePopup
+          onjoinRoom={joinRoom}
+        />
+      )}
     </div>
   );
 };
