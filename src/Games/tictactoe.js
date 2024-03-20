@@ -51,7 +51,6 @@ const GameBoard = () => {
     newBoard[index] = "X"; 
     setBoard(newBoard);
     setWaitingForOpponent(true);
-    debugger
     const gameBoardString = newBoard.map((value, idx) => {
       return value || (idx === index ? "X" : "-");
     }).join("");
