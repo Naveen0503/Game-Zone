@@ -111,10 +111,11 @@ const GameBoard = () => {
     useEffect( async () => {
         const response = await axios.get("https://game-zone-api-v1.azurewebsites.net/api/tictactoesessions/1")
         const { data } = response;
-       if(data.gameBoard === "---------"){
+       if(data.gameBoard === "---------" || data.gameBoard === ""){
         setPlayer("X");
        }else{
         setPlayer("O");
+        updateGameBoard(data.gameBoard);
        }
     },[])
   const renderSquare = (index) => {
