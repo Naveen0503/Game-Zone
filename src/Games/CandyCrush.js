@@ -109,7 +109,7 @@ const CandyCrush = () => {
     {
       const columnOfThree = [i,i+width,i+width*2]
       const decidedColor = currentcolorArrangement[i].color
-      const isBlank = currentcolorArrangement[i].color === blank
+      const isBlank = currentcolorArrangement[i].color === "blank"
 
       if(columnOfThree.every(square => currentcolorArrangement[square].color === decidedColor && !isBlank)){
         if(columnOfThree.some(square => currentcolorArrangement[square].type === "vstriped" || columnOfThree.some(square => currentcolorArrangement[square].type === "hstriped"))){
@@ -158,7 +158,7 @@ const CandyCrush = () => {
     {
       const columnOfFour = [i,i+width,i+width*2,i+width*3]
       const decidedColor = currentcolorArrangement[i].color
-      const isBlank = currentcolorArrangement[i].color === blank
+      const isBlank = currentcolorArrangement[i].color === "blank"
      
       if(columnOfFour.every(square => currentcolorArrangement[square].color === decidedColor && !isBlank)){
         if(columnOfFour.some(square => currentcolorArrangement[square].type === "vstriped" || columnOfFour.some(square => currentcolorArrangement[square].type === "hstriped"))){
@@ -213,7 +213,7 @@ const CandyCrush = () => {
     {
       const columnOfFive = [i,i+width,i+width*2,i+width*3,i+width*4]
       const decidedColor = currentcolorArrangement[i].color;
-      const isBlank = currentcolorArrangement[i].color === blank
+      const isBlank = currentcolorArrangement[i].color === "blank"
 
       if(columnOfFive.every(square => currentcolorArrangement[square].color === decidedColor && !isBlank)){
         if(columnOfFive.some(square => currentcolorArrangement[square].type === "vstriped" || columnOfFive.some(square => currentcolorArrangement[square].type === "hstriped"))){
@@ -269,7 +269,7 @@ const CandyCrush = () => {
       const rowOfThree = [i,i+1,i+2]
       const decidedColor = currentcolorArrangement[i].color;
       const notvalid =[6,7,14,15,22,23,30,31,38,39,46,47,54,55,62,63]
-      const isBlank = currentcolorArrangement[i].color === blank
+      const isBlank = currentcolorArrangement[i].color === "blank"
 
       if(notvalid.includes(i)) continue
 
@@ -317,7 +317,7 @@ const CandyCrush = () => {
       const rowOfFour = [i,i+1,i+2,i+3]
       const decidedColor = currentcolorArrangement[i].color;
       const notvalid =[5,6,7,13,14,15,21,22,23,29,30,31,37,38,39,45,46,47,53,54,55,61,62,63]
-      const isBlank = currentcolorArrangement[i].color === blank
+      const isBlank = currentcolorArrangement[i].color === "blank"
 
       if(notvalid.includes(i)) continue
       if(rowOfFour.every(square => currentcolorArrangement[square].color === decidedColor && !isBlank)){
@@ -374,7 +374,7 @@ const CandyCrush = () => {
       const rowOfFive = [i,i+1,i+2,i+3,i+4]
       const decidedColor = currentcolorArrangement[i].color;
       const notvalid =[4,5,6,7,12,13,14,15,20,21,22,23,28,29,30,31,36,37,38,39,44,45,46,47,52,53,54,55,60,61,62,63]
-      const isBlank = currentcolorArrangement[i].color === blank
+      const isBlank = currentcolorArrangement[i].color === "blank"
 
       if(notvalid.includes(i)) continue
 
@@ -464,7 +464,7 @@ const CandyCrush = () => {
             }
         }
       }
-        if(currentcolorArrangement[colorId].type === "vstriped" || currentcolorArrangement[colorId].type === "hstriped" || currentcolorArrangement[colorId].type === "colorbomb"){
+        if(currentcolorArrangement[colorId].type !== "vstriped" || currentcolorArrangement[colorId].type !== "hstriped"){
         currentcolorArrangement[colorId].src = blank;
         currentcolorArrangement[colorId].color = "blank";
         currentcolorArrangement[colorId].type = "regular";
