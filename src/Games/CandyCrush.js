@@ -422,7 +422,6 @@ const CandyCrush = () => {
    }
 
    const checkcolorbomb = (squareBeingDraggedId, squareBeingReplacedId) => {
-    debugger;
     const colorbomb = currentcolorArrangement[squareBeingDraggedId].type === "colorbomb" || currentcolorArrangement[squareBeingReplacedId].type === "colorbomb";
     if (colorbomb) {
         const colorId = currentcolorArrangement[squareBeingDraggedId].type === "colorbomb" ? squareBeingReplacedId : squareBeingDraggedId;
@@ -541,7 +540,6 @@ const CandyCrush = () => {
     const isARowOfFour = checkColumnOfFour();
     const isAColumnOfThree = checkColumnOfThree();
     const isARowOfThree = checkRowOfThree();
-
     const colorbombeffect = validMove ? checkcolorbomb(squareBeingDraggedId, squareBeingReplacedId) : false;
     if (squareBeingReplacedId && validMove && (
         isAColumnOfFive || isARowOfFive ||
