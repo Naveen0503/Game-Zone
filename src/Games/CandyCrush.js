@@ -21,8 +21,7 @@ import vstripedyellow from "./images/Striped_yellow_v.png"
 import hstripedyellow from "./images/Striped_yellow_h.png"
 import colorbombcandy from "./images/Colour_Bomb_new.png"
 import { updateScore } from "./api";
-import { is } from "@babel/types";
-import { get } from "lodash";
+
 
 
 const width = 8
@@ -470,8 +469,11 @@ const CandyCrush = () => {
         currentcolorArrangement[colorbombId].color = "blank";
         currentcolorArrangement[colorbombId].type = "regular";
         setScoreDisplay((score) => score + count*10);
+        return true
     }
-    return true;
+    else{
+      return false
+    }
    }
 
    const moveSquareIntoBelow = () => {
