@@ -15,6 +15,7 @@ function Dashboard() {
   const nav = useNavigate();
   const handleBack = () => {
     nav("/");
+    window.location.reload();
   }
     return (
         <div className="dashboard">
