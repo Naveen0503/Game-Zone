@@ -46,7 +46,7 @@ const GameBoard = () => {
     setRoomId(roomId);
     setPlayer1Id(player1Id);
     setPlayer2Id(player2Id);
-    let opponnentid = sessionStorage.getItem("user") === player1Id ? player2Id : player1Id;
+    let opponnentid = sessionStorage.getItem("user") == player1Id ? player2Id : player1Id;
     axios.get(`https://game-zone-api-v1.azurewebsites.net/api/Gamers`)
     .then((response) => {
       response.data.forEach(element => {
