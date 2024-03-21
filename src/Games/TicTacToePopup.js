@@ -167,6 +167,8 @@ const TicTacToePopup = ({ onjoinRoom }) => {
                     value={joinRoomId}
                     onChange={(e) => setJoinRoomId(e.target.value)}
                   />
+                  {error && <p style={{ color: "red" }}>{error}</p>}
+                  {loading ? "Loading..." :
                   <button
                     className="btn btn-primary"
                     style={{ backgroundColor: "#800080", borderColor: "#800080" }}
@@ -174,6 +176,7 @@ const TicTacToePopup = ({ onjoinRoom }) => {
                   >
                     Join Room
                   </button>
+                  }
                 </div>
               )}
             </div>

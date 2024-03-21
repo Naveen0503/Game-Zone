@@ -8,7 +8,6 @@ const TicTacToe = () => {
     <div className="game-container">
       <h1 style={{color:"white"}}>Tic Tac Toe</h1>
       <GameBoard />
-      <button  className="btn btn-primary playagain" style={{ backgroundColor: "#800080", borderColor: "#800080" , display:"none" ,position:"relative", left:"47%"}} onClick={() => window.location.reload()}>Play Again</button>
     </div>
   );
 };
@@ -26,6 +25,21 @@ const GameBoard = () => {
   const [player2Id, setPlayer2Id] = useState("");
   const [opponentname, setOpponentname] = useState("");
    
+  const refresh = () => {
+     setBoard(Array(9).fill(null));
+      setWinner(null);
+      setWaitingForOpponent(false);
+      setGameString("");
+      setFetchData(false);
+      setPlayer("");
+      setShowPopup(true);
+      setRoomId("");
+      setPlayer1Id("");
+      setPlayer2Id("");
+      setOpponentname("");
+      document.querySelector('.winner').innerHTML = "";
+      document.querySelector('.playagain').style.display = "none";
+  }
 
   const joinRoom = (roomId, player, player1Id , player2Id) => {
     setPlayer(player);
@@ -192,6 +206,7 @@ const GameBoard = () => {
       <div className="winner"></div>
       {!winner && !waitingForOpponent && <div> your Move : {player}</div>}
       {!winner && waitingForOpponent && <div>Waiting for {opponentname}'s move...</div>}
+      <button  className="btn btn-primary playagain" style={{ backgroundColor: "#800080", borderColor: "#800080" , display:"none" ,position:"relative", left:"36%"}} onClick={refresh}>Play Again</button>
       {showPopup && (
         <TicTacToePopup
           onjoinRoom={joinRoom}
