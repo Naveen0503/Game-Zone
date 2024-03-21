@@ -133,7 +133,7 @@ const TicTacToePopup = ({ onjoinRoom }) => {
                   >
                     <option value="">Select a player</option>
                     {userData.map((user) => {
-                        if (user.id !== sessionStorage.getItem('user')) {
+                        if (user.id != sessionStorage.getItem('user')) {
                             return (
                                 <option key={user.id} value={user.id}>{user.name}</option>
                             );

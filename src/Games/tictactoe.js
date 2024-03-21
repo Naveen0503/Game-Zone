@@ -6,8 +6,9 @@ import TicTacToePopup from "./TicTacToePopup";
 const TicTacToe = () => {
   return (
     <div className="game-container">
-      <h1>Tic Tac Toe</h1>
+      <h1 style={{color:"white"}}>Tic Tac Toe</h1>
       <GameBoard />
+      <button  className="btn btn-primary playagain" style={{ backgroundColor: "#800080", borderColor: "#800080" , display:"none" ,position:"relative", left:"47%"}} onClick={() => window.location.reload()}>Play Again</button>
     </div>
   );
 };
@@ -23,6 +24,7 @@ const GameBoard = () => {
   const [roomId, setRoomId] = useState("");
   const [player1Id, setPlayer1Id] = useState("");
   const [player2Id, setPlayer2Id] = useState("");
+  const [opponentname, setOpponentname] = useState("");
    
 
   const joinRoom = (roomId, player, player1Id , player2Id) => {
@@ -30,6 +32,15 @@ const GameBoard = () => {
     setRoomId(roomId);
     setPlayer1Id(player1Id);
     setPlayer2Id(player2Id);
+    let opponnentid = sessionStorage.getItem("user") === player1Id ? player2Id : player1Id;
+    axios.get(`https://game-zone-api-v1.azurewebsites.net/api/Gamers`)
+    .then((response) => {
+      response.data.forEach(element => {
+            if(element.id == opponnentid){
+              setOpponentname(element.name);
+            }
+      });
+    })
     if(player === 'X') {
       setWaitingForOpponent(false);
     }
@@ -39,6 +50,7 @@ const GameBoard = () => {
       setFetchData(true);
     }
     setShowPopup(false);
+    console.log(winner);
   }
 
   const fetchGameState = async () => {
@@ -142,7 +154,24 @@ const GameBoard = () => {
       </button>
     );
   };
-
+   useEffect(() => {
+    if(winner){
+    if(winner==="Draw"){
+      document.querySelector('.winner').innerHTML = "It's a Draw";
+      document.querySelector('.playagain').style.display = "block";
+    }
+    else{
+      if(player == winner){
+        document.querySelector('.winner').innerHTML = "You Win";
+        document.querySelector('.playagain').style.display = "block";
+      }
+      else{
+        document.querySelector('.winner').innerHTML =  `${opponentname} Wins`;
+        document.querySelector('.playagain').style.display = "block";
+      }
+    }
+  }
+   }, [winner]);
   return (
     <div className={`game-board${waitingForOpponent ? " waiting" : ""}`}>
       <div className="board-row">
@@ -160,8 +189,9 @@ const GameBoard = () => {
         {renderSquare(7)}
         {renderSquare(8)}
       </div>
-      {winner && <div>Winner: {winner}</div>}
-      {!winner && waitingForOpponent && <div>Waiting for opponent...</div>}
+      <div className="winner"></div>
+      {!winner && !waitingForOpponent && <div> your Move : {player}</div>}
+      {!winner && waitingForOpponent && <div>Waiting for {opponentname}'s move...</div>}
       {showPopup && (
         <TicTacToePopup
           onjoinRoom={joinRoom}
